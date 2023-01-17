@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Web3 from 'web3';
 import Model from './model/model'
 import detectEthereumProvider from '@metamask/detect-provider';
-import contract from "@truffle/contract";
+import contract_truff from "@truffle/contract";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -14,7 +14,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const SmContract = async (name, provider) => {
     const res = await fetch(`/contracts/${name}.json`);
     const Artifact = await res.json();
-    const _contract = contract(Artifact);
+    const _contract = contract_truff(Artifact);
     console.log("dd:rocket")
     _contract.setProvider(provider);
     const deployedContract = await _contract.deployed();
@@ -27,6 +27,7 @@ export default function App() {
         provider: null,
         web3: null,
         contract: null,
+        
     });
 
     const [account, setaccount] = useState(false);
@@ -75,11 +76,12 @@ export default function App() {
     useEffect(() => {
         (
             async () => {
+                console.log(_web3.contract);
                 if (_web3.contract) {
                     const { web3, contract } = _web3;
                     console.log(web3)
                     const address = await web3?.eth?.getAccounts()
-                    const balance = await web3?.eth?.getBalance(address[0])
+                    const balance = await web3?.eth?.getBalance(address?.[0])
                     const Ethers = await web3?.utils?.fromWei(balance)
                     const Cbalance1 = await web3?.eth?.getBalance(contract.address)
                     setbalance(Ethers)
